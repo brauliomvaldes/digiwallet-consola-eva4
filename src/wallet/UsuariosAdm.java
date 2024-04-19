@@ -39,33 +39,37 @@ public class UsuariosAdm {
 				break;
 			case "2":
 				Mostrar.tituloUsuario();
-				mensaje = "\nIngrese ID Usuario a mostrar ? ";
+				mensaje = "\nIngrese ID Usuario (0=termina) ? ";
 				System.out.print(mensaje);
 				id = ValidadorNumerico.validaInt(leeteclado, mensaje);
-				User user = userService.findById(id, usuarios);
-				if (user != null) {
-					Mostrar.imprimirDatosUsuario(user);
-				} else {
-					System.out.println("\n" + " ".repeat(10) + "¡ Error !, usuario solictado no existe\n");
+				if (id > 0) {
+					User user = userService.findById(id, usuarios);
+					if (user != null) {
+						Mostrar.imprimirDatosUsuario(user);
+					} else {
+						System.out.println("\n" + " ".repeat(10) + "¡ Error !, usuario solictado no existe\n");
+					}
 				}
 				break;
 			case "3":
 				Mostrar.tituloEdicionUsuario();
-				mensaje = "\nIngrese ID Usuario ? ";
+				mensaje = "\nIngrese ID Usuario (0=termina) ? ";
 				System.out.print(mensaje);
 				id = ValidadorNumerico.validaInt(leeteclado, mensaje);
-				User userEdit = userService.findById(id, usuarios);
-				if (userEdit != null) {
-					User userEdited = edicionDatosDelUsuario(leeteclado, userService, usuarios, userEdit); // solicita
-																											// ingreso
-																											// de
-																											// cambios
-					if (userEdited != null) { // proceso de edición exitoso
-						userService.edit(id, userEdited, usuarios); //
-						System.out.println(" ".repeat(10) + "\nUsuario modificado existosamente !!\n");
+				if (id > 0) {
+					User userEdit = userService.findById(id, usuarios);
+					if (userEdit != null) {
+						User userEdited = edicionDatosDelUsuario(leeteclado, userService, usuarios, userEdit); // solicita
+						// ingreso
+						// de
+						// cambios
+						if (userEdited != null) { // proceso de edición exitoso
+							userService.edit(id, userEdited, usuarios); //
+							System.out.println(" ".repeat(10) + "\nUsuario modificado existosamente !!\n");
+						}
+					} else {
+						System.out.println(" ".repeat(10) + "\n¡ Error !, usuario solictado no existe\n");
 					}
-				} else {
-					System.out.println(" ".repeat(10) + "\n¡ Error !, usuario solictado no existe\n");
 				}
 				break;
 			case "4":
@@ -152,11 +156,17 @@ public class UsuariosAdm {
 			boolean user_sex = sexo.equals("h") ? true : false;
 			usuario.setUser_username(user_username);
 			usuario.setUser_password_hash(user_password_hash);
-			usuario.setUser_created_at(new Date());
 			usuario.setUser_age((short) user_age);
 			usuario.setUser_sex(user_sex);
 			usuario.setUser_married(user_married);
+		} else {
+			usuario.setUser_username(""); // datos por defecto
+			usuario.setUser_password_hash("");
+			usuario.setUser_age((short) 18);
+			usuario.setUser_sex(true);
+			usuario.setUser_married(false);
 		}
+		usuario.setUser_created_at(new Date());
 		usuario.setUser_firstname(user_name);
 		usuario.setUser_lastname(user_lastname);
 		usuario.setUser_identity_number(user_identity_number);
@@ -224,7 +234,24 @@ public class UsuariosAdm {
 		System.out.print(" ".repeat(10) + "Sexo    h=hombre ( " + sexo + " ) ? ");
 		sexo = leeteclado.next();
 		System.out.println("_".repeat(140));
-		User usuario = new User();
+		
+		System.out.print(" ".repeat(10) + "Sexo    h=hombre ( " + sexo + " ) ? ");
+		sexo = leeteclado.next();
+		System.out.println("_".repeat(140));
+		
+		System.out.println("*".repeat(40));
+		System.out.print(" ".repeat(10) + "Habilita Username y Password provisorio (s=Si) ? ");
+		String habilitado = leeteclado.next().toLowerCase();
+		
+		User usuario = new User(); // crea instancia de usuario editado
+		if(habilitado.equals("s")) { // set password y username por defecto
+			usuario.setUser_username(user_firstname); 
+			usuario.setUser_password_hash("123");
+			System.out.println(" ".repeat(10)+"se configuro username: "+user_firstname+" y password: 123");
+		}
+		System.out.println("_".repeat(140));
+		
+		
 		boolean user_married = ecivil.equals("c") ? true : false;
 		boolean user_sex = sexo.equals("h") ? true : false;
 		if (user_firstname.equalsIgnoreCase("m")) // "m" no hay cambios conserva el valor original

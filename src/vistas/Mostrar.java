@@ -377,6 +377,12 @@ public class Mostrar {
 		System.out.println("-".repeat(120));
 	}
 
+	public static void tituloCreacionNuevaCuenta() {
+		System.out.println("\n" + "-".repeat(140));
+		System.out.println(" ".repeat(10) + "Creación de Nueva Cuenta");
+		System.out.println("-".repeat(140));
+	}
+	
 	public static void tituloEliminaciónCuentasPago() {
 		System.out.println("\n" + "-".repeat(120));
 		System.out.println(" ".repeat(10) + "\nELIMINACION DE CUENTAS PAGO");

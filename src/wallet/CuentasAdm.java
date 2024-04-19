@@ -117,9 +117,7 @@ public class CuentasAdm {
 			BankService bankService, CurrencyService currencyService, ToAService toaService, AccountService ctasService,
 			UserAuth userAuth, User nvousuario) {
 
-		System.out.println("\n" + "4".repeat(140));
-		System.out.println(" ".repeat(10) + "Creación de Nueva Cuenta");
-		System.out.println("-".repeat(140));
+		Mostrar.tituloCreacionNuevaCuenta();
 		User usuario;
 		String mensaje = "";
 		int account_user;
