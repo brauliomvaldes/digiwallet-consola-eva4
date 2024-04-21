@@ -210,21 +210,20 @@ public class UsuariosAdm {
 						System.out.println("El DNI/Rut ingresado ya existe en un Cliente");
 					}
 				}
-
 			} else { // mantiene rut original
 				rutValido = true;
 			}
 		} while (!rutValido);
 		System.out.print(" ".repeat(10) + "E.Civil c=casado ( " + ecivil + " ) ? ");
 		ecivil = leeteclado.next();
-		int user_age = -1;
+		int user_age = -1; // valor inválido
 		while (user_age < 18) {
 			String mensaje = " ".repeat(10) + "Edad [0]mantiene ( " + userEdited.isUser_age() + " ) ? ";
 			System.out.print(mensaje);
 			user_age = ValidadorNumerico.validaInt(leeteclado, mensaje);
-			if (user_age == 0) {
+			if (user_age == 0) { 
 				break; // mantiene edad
-			} else if (user_age < 18 || user_age > 120) {
+			} else if (user_age < 18 || user_age > 120) { // mayoría de edad
 				user_age = -1;
 				System.out.println("debe ingresar una edad válida");
 			}
@@ -234,15 +233,12 @@ public class UsuariosAdm {
 		System.out.print(" ".repeat(10) + "Sexo    h=hombre ( " + sexo + " ) ? ");
 		sexo = leeteclado.next();
 		System.out.println("_".repeat(140));
-		
 		System.out.print(" ".repeat(10) + "Sexo    h=hombre ( " + sexo + " ) ? ");
 		sexo = leeteclado.next();
 		System.out.println("_".repeat(140));
-		
 		System.out.println("*".repeat(40));
 		System.out.print(" ".repeat(10) + "Habilita Username y Password provisorio (s=Si) ? ");
 		String habilitado = leeteclado.next().toLowerCase();
-		
 		User usuario = new User(); // crea instancia de usuario editado
 		if(habilitado.equals("s")) { // set password y username por defecto
 			usuario.setUser_username(user_firstname); 
@@ -250,8 +246,6 @@ public class UsuariosAdm {
 			System.out.println(" ".repeat(10)+"se configuro username: "+user_firstname+" y password: 123");
 		}
 		System.out.println("_".repeat(140));
-		
-		
 		boolean user_married = ecivil.equals("c") ? true : false;
 		boolean user_sex = sexo.equals("h") ? true : false;
 		if (user_firstname.equalsIgnoreCase("m")) // "m" no hay cambios conserva el valor original

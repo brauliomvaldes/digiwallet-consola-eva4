@@ -116,7 +116,6 @@ public class CuentasAdm {
 			List<Bank> bancos, List<TypeOfAccount> toas, List<Currencyy> monedas, UserService userService,
 			BankService bankService, CurrencyService currencyService, ToAService toaService, AccountService ctasService,
 			UserAuth userAuth, User nvousuario) {
-
 		Mostrar.tituloCreacionNuevaCuenta();
 		User usuario;
 		String mensaje = "";
@@ -154,21 +153,17 @@ public class CuentasAdm {
 			}
 			return null;
 		}
-		;
 		double account_balance = 0;
 		if (userAuth.getRole().equals(Role.ADMIN)) {
 			
 			mensaje = " ".repeat(10) + "Balance inicial     : ";
 			System.out.print(mensaje);
 			account_balance = ValidadorNumerico.validaDouble(leeteclado, mensaje);
-			
 		}
 		currencyService.findAll(monedas); // lista monedas
-		
 		mensaje = " ".repeat(10) + "Id moneda           : ";
 		System.out.print(mensaje);
 		int account_currency_id = ValidadorNumerico.validaInt(leeteclado, mensaje);
-		
 		Currencyy moneda = currencyService.findById(account_currency_id, monedas); // busca la moneda
 		if (moneda == null) {// valida exista moneda
 			return null;
@@ -184,11 +179,9 @@ public class CuentasAdm {
 			return null;
 		}
 		bankService.findAll(bancos); // lista bancos
-
 		mensaje = " ".repeat(10) + "Id Banco            : ";
 		System.out.print(mensaje);
 		int account_bank_id = ValidadorNumerico.validaInt(leeteclado, mensaje);
-		
 		Bank banco = bankService.findById(account_bank_id, bancos); // busca el banco
 		if (banco == null) {// valida exista el banco
 			return null;
@@ -229,13 +222,10 @@ public class CuentasAdm {
 		TypeOfAccount toa;
 		Bank banco;
 		String mensaje = "";
-		
 		userService.findAll(usuarios); // muestra usuarios disponibles
-		
 		mensaje = " ".repeat(10) + "Id Usuario        ( " + oldUser + ") ? ";
 		System.out.print(mensaje);
 		int account_user = ValidadorNumerico.validaInt(leeteclado, mensaje);
-		
 		if (account_user > 0) {
 			usuario = userService.findById(account_user, usuarios);
 			if (usuario == null) // valida exista el usuario
@@ -257,11 +247,9 @@ public class CuentasAdm {
 			moneda = ctaEdit.getAccount_currency_id();
 		}
 		toaService.findAll(toas); // muestra tipos de cuenta disponibles
-		
 		mensaje = " ".repeat(10) + "Id Tipo de Cuenta ( " + oldToA + ") ? ";
 		System.out.print(mensaje);
 		int account_type_id = ValidadorNumerico.validaInt(leeteclado, mensaje);
-		
 		if (account_type_id > 0) {
 			toa = toaService.findById(account_type_id, toas);
 			if (toa == null) // valida exista tipo de cuenta
@@ -270,11 +258,9 @@ public class CuentasAdm {
 			toa = ctaEdit.getAccount_type_id();
 		}
 		bankService.findAll(bancos); // muestra bancos disponibles
-		
 		mensaje = " ".repeat(10) + "Id Banco          ( " + oldBank + ") ? ";
 		System.out.print(mensaje);
 		int account_bank_id = ValidadorNumerico.validaInt(leeteclado, mensaje);
-		
 		if (account_bank_id > 0) {
 			banco = bankService.findById(account_bank_id, bancos);
 			if (banco == null) // valida exista el banco

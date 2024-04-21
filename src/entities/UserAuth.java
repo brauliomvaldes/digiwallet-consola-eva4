@@ -7,6 +7,14 @@ public class UserAuth {
 	private Role role;
 	private User user;
 	
+	public UserAuth() {}
+	
+	public UserAuth(String username, String password, Role role, User user) {
+		this.username = username;
+		this.password = password;
+		this.role = role;
+		this.user = user;
+	}
 	public String getUsername() {
 		return username;
 	}
