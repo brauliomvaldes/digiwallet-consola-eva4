@@ -1,5 +1,6 @@
 package entities;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class AccountPaid {
@@ -8,13 +9,13 @@ public class AccountPaid {
 	private AccountPayable accountPayable;
 	private String paymentMethod;
 	private Date datePaid;
-	private Double amountPaid;
+	private BigDecimal amountPaid;
 	private Account accountUser;
 	
 	public AccountPaid() {};
  
 	public AccountPaid(int idAccountPaid, AccountPayable accountPayable, String paymentMethod, Date datePaid,
-			Double amountPaid, Account accountUser) {
+			BigDecimal amountPaid, Account accountUser) {
 		super();
 		this.idAccountPaid = idAccountPaid;
 		this.accountPayable = accountPayable;
@@ -48,10 +49,10 @@ public class AccountPaid {
 	public void setDatePaid(Date datePaid) {
 		this.datePaid = datePaid;
 	}
-	public Double getAmountPaid() {
+	public BigDecimal getAmountPaid() {
 		return amountPaid;
 	}
-	public void setAmountPaid(Double amountPaid) {
+	public void setAmountPaid(BigDecimal amountPaid) {
 		this.amountPaid = amountPaid;
 	}
 	public Account getAccountUser() {

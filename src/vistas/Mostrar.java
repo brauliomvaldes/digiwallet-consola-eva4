@@ -1,5 +1,6 @@
 package vistas;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -235,8 +236,8 @@ public class Mostrar {
 	 * @param cuenta origen, saldo origen, cuenta destino, saldo destino
 	 * @return void
 	 */
-	public static void mensajeOperacionExitosa(Account cuentaOrigen, double saldoOrigen, Account cuentaDestino,
-			double saldoDestino) {
+	public static void mensajeOperacionExitosa(Account cuentaOrigen, BigDecimal saldoOrigen, Account cuentaDestino,
+			BigDecimal saldoDestino) {
 		System.out.println(".".repeat(120));
 		System.out.println(" ".repeat(20) + "* * * Transferencia exitosa * * *");
 		System.out.println(".".repeat(120));

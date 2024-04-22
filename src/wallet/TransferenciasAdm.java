@@ -1,5 +1,6 @@
 package wallet;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 
@@ -55,9 +56,9 @@ public class TransferenciasAdm {
 														// señalada
 							// recupera cuentas y montos involucrados
 							String cuentaOrigen = trfReversar.getTr_sender_account_id().getAccount_number();
-							double montoCuentaOrigen = trfReversar.getTr_amount_sender();
+							BigDecimal montoCuentaOrigen = trfReversar.getTr_amount_sender();
 							String cuentaDestino = trfReversar.getTr_receiver_account_id().getAccount_number();
-							double montoCuentaDestino = trfReversar.getTr_amount_receiver();
+							BigDecimal montoCuentaDestino = trfReversar.getTr_amount_receiver();
 							boolean resultado = ctasService.reversar(cuentas, cuentaOrigen, montoCuentaOrigen,
 									cuentaDestino, montoCuentaDestino);
 							if (resultado)

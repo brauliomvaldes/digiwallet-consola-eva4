@@ -1,5 +1,6 @@
 package entities;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 
@@ -8,7 +9,7 @@ public class Account{
 	  private int account_id;  
 	  private User account_user; 
 	  private String account_number;  
-	  private double account_balance;
+	  private BigDecimal account_balance;
 	  private Currencyy account_currency_id; 
 	  private Date account_created_at; 
 	  private TypeOfAccount account_type_id; 
@@ -17,7 +18,7 @@ public class Account{
 	
 	public Account() {};
 	  
-	public Account(int account_id, User account_user, String account_number, double account_balance,
+	public Account(int account_id, User account_user, String account_number, BigDecimal account_balance,
 			Currencyy account_currency_id, Date account_created_at, TypeOfAccount account_type_id, Bank account_bank_id,
 			boolean account_state) {
 		this.account_id = account_id;
@@ -75,12 +76,12 @@ public class Account{
 	}
 
 
-	public double getAccount_balance() {
+	public BigDecimal getAccount_balance() {
 		return account_balance;
 	}
 
 
-	public void setAccount_balance(double account_balance) {
+	public void setAccount_balance(BigDecimal account_balance) {
 		this.account_balance = account_balance;
 	}
 
@@ -124,7 +125,6 @@ public class Account{
 		this.account_bank_id = account_bank_id;
 	}
 
-
 	public boolean isAccount_state() {
 		return account_state;
 	}
@@ -134,13 +134,13 @@ public class Account{
 		this.account_state = account_state;
 	}
 
-	public void ingreso(double amount) {
-		this.setAccount_balance(this.account_balance+(Math.abs(amount)));
+	public void ingreso(BigDecimal amount) {
+		this.setAccount_balance(this.account_balance.add(amount.abs()));
 	}
 	
-	public void reintegro(double amount) {
-		if(amount <= this.account_balance) {
-			this.setAccount_balance(this.account_balance-(Math.abs(amount)));
+	public void reintegro(BigDecimal amount) {
+		if(this.account_balance.compareTo(amount) >= 0) {
+			this.setAccount_balance(this.account_balance.subtract(amount.abs()));
 		}
 	}
 }

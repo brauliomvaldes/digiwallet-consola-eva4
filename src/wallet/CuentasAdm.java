@@ -1,6 +1,7 @@
 package wallet;
 
 import java.util.List;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -153,12 +154,12 @@ public class CuentasAdm {
 			}
 			return null;
 		}
-		double account_balance = 0;
+		BigDecimal account_balance = BigDecimal.ZERO;
 		if (userAuth.getRole().equals(Role.ADMIN)) {
 			
 			mensaje = " ".repeat(10) + "Balance inicial     : ";
 			System.out.print(mensaje);
-			account_balance = ValidadorNumerico.validaDouble(leeteclado, mensaje);
+			account_balance = ValidadorNumerico.validaBigDecimal(leeteclado, mensaje);
 		}
 		currencyService.findAll(monedas); // lista monedas
 		mensaje = " ".repeat(10) + "Id moneda           : ";

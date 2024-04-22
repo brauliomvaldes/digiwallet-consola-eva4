@@ -17,6 +17,7 @@ import entities.TypeOfAccount;
 import entities.User;
 import vistas.Mostrar;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 /**
@@ -260,7 +261,7 @@ public class RunnerPrincipal {
 		System.out.println("poblando cuentas .................................");
 		account1.setAccount_id(1); // poblando cuenta 1
 		account1.setAccount_user(user1);
-		account1.setAccount_balance(1000000);
+		account1.setAccount_balance(BigDecimal.valueOf(1000000));
 		account1.setAccount_bank_id(bank1);
 		account1.setAccount_currency_id(currency1);
 		account1.setAccount_type_id(toa1);
@@ -269,7 +270,7 @@ public class RunnerPrincipal {
 		account1.setAccount_state(true);
 		account2.setAccount_id(2); // poblando cuenta 2
 		account2.setAccount_user(user2);
-		account2.setAccount_balance(1000000);
+		account2.setAccount_balance(BigDecimal.valueOf(1000000));
 		account2.setAccount_bank_id(bank1);
 		account2.setAccount_currency_id(currency1);
 		account2.setAccount_type_id(toa1);
@@ -278,7 +279,7 @@ public class RunnerPrincipal {
 		account2.setAccount_state(true);
 		account3.setAccount_id(3); // poblando cuenta 3
 		account3.setAccount_user(user3);
-		account3.setAccount_balance(1000000);
+		account3.setAccount_balance(BigDecimal.valueOf(1000000));
 		account3.setAccount_bank_id(bank1);
 		account3.setAccount_currency_id(currency1);
 		account3.setAccount_type_id(toa1);
@@ -287,7 +288,7 @@ public class RunnerPrincipal {
 		account3.setAccount_state(true);
 		account4.setAccount_id(4); // poblando cuenta 4
 		account4.setAccount_user(user1);
-		account4.setAccount_balance(10000);
+		account4.setAccount_balance(BigDecimal.valueOf(10000));
 		account4.setAccount_bank_id(bank1);
 		account4.setAccount_currency_id(currency2);
 		account4.setAccount_type_id(toa2);

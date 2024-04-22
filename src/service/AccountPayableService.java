@@ -3,6 +3,7 @@ package service;
 import java.util.List;
 
 import entities.AccountPayable;
+import entities.UserAuth;
 import persistence.IEntitiesService;
 
 public class AccountPayableService implements IEntitiesService<AccountPayable>{
@@ -18,10 +19,33 @@ public class AccountPayableService implements IEntitiesService<AccountPayable>{
 		});	
 	}
 
+	public void findAllByUser(List<AccountPayable> accountPayables, UserAuth userAuth) {
+		accountPayables.forEach(ap -> {
+			if(ap.getUserAccount().getUser_id()==userAuth.getUser().getUser_id()) {				
+				System.out.println(" ".repeat(10) + "Id : " + ap.getIdPayable()+" "
+						+ap.getNamePayable().toUpperCase()+ " -> "
+						+ap.getUserAccount().getUser_firstname()+ " "
+						+ap.getUserAccount().getUser_lastname()
+						);
+			}
+		});	
+	}
+	
 	@Override
 	public AccountPayable findById(int idAccountPayable, List<AccountPayable> accountPayables) {
 		for(AccountPayable accountPayable: accountPayables) {
 			if(accountPayable.getIdPayable()==idAccountPayable) {
+				return accountPayable;
+			}
+		}
+		return null;
+	}
+	
+	
+	public AccountPayable findByIdPagoAndUser(int idAccountPayable, List<AccountPayable> accountPayables, UserAuth userAuth) {
+		for(AccountPayable accountPayable: accountPayables) {
+			if(accountPayable.getIdPayable()==idAccountPayable && 
+					accountPayable.getUserAccount().getUser_id() == userAuth.getUser().getUser_id()) {
 				return accountPayable;
 			}
 		}

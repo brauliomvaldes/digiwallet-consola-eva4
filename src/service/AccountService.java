@@ -1,5 +1,6 @@
 package service;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class AccountService implements IEntitiesService<Account> {
 	public List<Account> findAllForUser(List<Account> accounts, UserAuth userAuth) {
 		List<Account> accountForUser = new ArrayList<>();
 		for(Account account: accounts) {
-			if(account.getAccount_user().getUser_id()==userAuth.getUser().getUser_id()) {
+			if(account.getAccount_user().getUser_id() == userAuth.getUser().getUser_id() ) {
 				accountForUser.add(account);
 			}
 		}
@@ -84,8 +85,8 @@ public class AccountService implements IEntitiesService<Account> {
 		return accounts;
 	}
 
-	public boolean reversar(List<Account> accounts, String origen, double origenDinero, String destino,
-			double destinoDinero) {
+	public boolean reversar(List<Account> accounts, String origen, BigDecimal origenDinero, String destino,
+			BigDecimal destinoDinero) {
 		// check saldo cuenta destino
 		Account cuentaDestino = accounts.stream().filter(a->a.getAccount_number().equals(destino)).findFirst().orElse(null);
 		Account cuentaOrigen = accounts.stream().filter(c->c.getAccount_number().equals(origen)).findFirst().orElse(null);
@@ -95,7 +96,7 @@ public class AccountService implements IEntitiesService<Account> {
 			return false;		
 		}
 		// si no tiene fondos suficientes para devolver dinero para revertirla transferencia
-		if(cuentaDestino.getAccount_balance()<destinoDinero) {
+		if(cuentaDestino.getAccount_balance().compareTo(destinoDinero) == -1) {
 			System.out.println("\n¡ Operación cancelada !, no es posible reversar los fondos para evitar sobregiro en la cuenta destino");
 			return false;			
 		}
@@ -116,7 +117,7 @@ public class AccountService implements IEntitiesService<Account> {
 		return true;
 	}
 	
-	public boolean descontarDinero(List<Account> accounts, String nroCuenta, double amount) {
+	public boolean descontarDinero(List<Account> accounts, String nroCuenta, BigDecimal amount) {
 		for(int i=0; i<accounts.size(); i++) {
 			if(accounts.get(i).getAccount_number().equals(nroCuenta)) {
 				accounts.get(i).reintegro(amount);
@@ -126,8 +127,8 @@ public class AccountService implements IEntitiesService<Account> {
 		return false;
 	}
 	
-	public double abonarDinero(Account account, List<Account> accounts, double amount) {
-		double balance = 0;
+	public BigDecimal abonarDinero(Account account, List<Account> accounts, BigDecimal amount) {
+		BigDecimal balance = BigDecimal.ZERO;
 		for(int i=0; i<accounts.size(); i++) {
 			if(accounts.get(i).getAccount_number().equals(account.getAccount_number())){
 				accounts.get(i).ingreso(amount);
@@ -137,12 +138,12 @@ public class AccountService implements IEntitiesService<Account> {
 		return balance;
 	}
 	
-	public double retirarDinero(Account account, List<Account> accounts, double amount) {
-		double balance = 0;
+	public BigDecimal retirarDinero(Account account, List<Account> accounts, BigDecimal amount) {
+		BigDecimal balance = BigDecimal.ZERO;
 		for(int i=0; i<accounts.size(); i++) {
 			if(accounts.get(i).getAccount_number().equals(account.getAccount_number())){
 				balance = accounts.get(i).getAccount_balance();
-				if(balance >= amount) {
+				if(balance.compareTo(balance) >= 0) {
 					accounts.get(i).reintegro(amount);
 				}
 				balance = accounts.get(i).getAccount_balance();

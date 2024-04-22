@@ -1,5 +1,6 @@
 package wallet;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 
@@ -37,7 +38,7 @@ public class MovimientoDeCuenta {
 					Account cuentaFake = cuentaUsuario.clone(); // clona cuenta como destino del giro u origen del abono
 					mensaje = "\nIngrese monto de dinero a operar ? ";
 					System.out.print(" ".repeat(10) + mensaje);
-					double montoOperacion = ValidadorNumerico.validaInt(leeteclado, mensaje);
+					BigDecimal montoOperacion = ValidadorNumerico.validaBigDecimal(leeteclado, mensaje);
 					Mostrar.menuMovimientosDeCuenta(userAuth.getUsername()); // menu opciones
 					String operacion = leeteclado.next();
 
@@ -54,7 +55,7 @@ public class MovimientoDeCuenta {
 						System.out.println("\n" + " ".repeat(10) + "...... Abono de dinero realizado");
 						break;
 					case "2":
-						if (cuentaUsuario.getAccount_balance() >= montoOperacion) {
+						if (cuentaUsuario.getAccount_balance().compareTo(montoOperacion) >= 0) {
 							cuentaFake.setAccount_number("GIRO");
 							ctasService.retirarDinero(cuentaUsuario, cuentasUsuario, montoOperacion);
 							id_transferencia++; // incrementa el id de transferencias

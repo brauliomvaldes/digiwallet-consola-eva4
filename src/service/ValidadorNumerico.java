@@ -1,5 +1,6 @@
 package service;
 
+import java.math.BigDecimal;
 import java.util.Scanner;
 
 public class ValidadorNumerico {
@@ -8,7 +9,7 @@ public class ValidadorNumerico {
 	 * Valida ingreso de un valor tipo int por teclado
 	 *
 	 * @param scanner, mensaje para el ingreso de datos
-	 * @return valor tipo entero
+	 * @return valor absoluto tipo entero
 	 */
 	public static int validaInt(Scanner leeteclado, String mensaje) {
 		Integer valor = 0;
@@ -45,15 +46,15 @@ public class ValidadorNumerico {
 	 * Valida ingreso de valor tipo double por teclado
 	 *
 	 * @param scanner, mensaje para el ingreso de datos
-	 * @return valor tipo double
+	 * @return valor absoluto tipo BigDecimal
 	 */
-	public static Double validaDouble(Scanner leeteclado, String mensaje) {
-		Double valor = 0d;
+	public static BigDecimal validaBigDecimal(Scanner leeteclado, String mensaje) {
+		BigDecimal valor = BigDecimal.ZERO;
 		do {
 			try {
 				String numStr = leeteclado.next();
 				if (validaStrDouble(numStr)) {
-					valor = Math.abs(Double.parseDouble(numStr));
+					valor = BigDecimal.valueOf(Double.parseDouble(numStr)).abs();
 					return valor;
 				}
 			} catch (Exception e) {

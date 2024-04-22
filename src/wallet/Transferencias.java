@@ -1,6 +1,7 @@
 package wallet;
 
 import java.util.List;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
@@ -33,9 +34,9 @@ public class Transferencias {
 			String nroCuentaOrigen, nroCuentaDestino; // cuentas seleccionadas
 			do {
 				Mostrar.tituloTransferencias();
-				double saldoOrigen = 0F; // almacena el saldo de la cuenta que envia
+				BigDecimal saldoOrigen = BigDecimal.ZERO; // almacenará el saldo de la cuenta que envia
 				Account cuentaOrigen = new Account(); // almacena la cuenta origen
-				double saldoDestino = 0F; // almacena el saldo de la cuenta que recibe
+				BigDecimal saldoDestino = BigDecimal.ZERO; // almacenará el saldo de la cuenta que recibe
 				Account cuentaDestino = new Account(); // almacena la cuenta destino
 				int id_origen = 0; // almacena el id del usuario que esta procesando los pagos
 				if (userAuth.getRole().equals(Role.ADMIN)) { // el ADMIN puede transferir entre cuentas
@@ -118,23 +119,20 @@ public class Transferencias {
 																										 * disponible
 																										 */
 									+ cuentaOrigen.getAccount_number() + " $ " + saldoOrigen + " " + monedaOrigen);
-							if (saldoOrigen > 0) { // si tiene saldo en cuenta para realizar transacciones
-								double factorCambio = solicitaFactor(monedaOrigen, monedaDestino,
+							if (saldoOrigen.compareTo(BigDecimal.ZERO) == 1) { // si tiene saldo en cuenta para realizar transacciones
+								BigDecimal factorCambio = solicitaFactor(monedaOrigen, monedaDestino,
 										leeteclado); /* visualiza el saldo disponible de la cuenta origen */
-								double montoTransferir = solicitaMontoTransferir(monedaOrigen,
+								BigDecimal montoTransferir = solicitaMontoTransferir(monedaOrigen,
 										leeteclado); /*
 														 * almacena monto a transferir de la cuenta origen sin
 														 * conversion
 														 */
-								double montoTrfOrigen = montoTransferir; /*
-																			 * esto porque si la cuenta es de otra
-																			 * moneda, se debe rebajar sin cambios
-																			 */
-								montoTransferir = montoTransferir * factorCambio; // aplica factor de cambio
-								if (saldoOrigen >= montoTrfOrigen) {
+								BigDecimal montoTrfOrigen = montoTransferir; /* conserva el monto para rebajar del saldo */
+								montoTransferir=calculoAplicaFactorConversion(montoTransferir, factorCambio); // aplica factor de cambio
+								if (saldoOrigen.compareTo(montoTrfOrigen) >= 0) {
 									System.out.print(" ".repeat(10) + "\nSe estan transferiendo " + montoTrfOrigen + " "
 											+ monedaOrigen); /* informa el monto a transferir en la moneda de destino */
-									if (factorCambio != 1) {
+									if (factorCambio.compareTo(BigDecimal.ONE) != 0) {
 										System.out.println(" ".repeat(10) + " -> con factor " + factorCambio
 												+ " -> equivale a " + montoTransferir + " " + monedaDestino);
 									} else {
@@ -146,7 +144,7 @@ public class Transferencias {
 																								 * transferencia
 																								 */
 									if (leeteclado.hasNext()) {
-										leeteclado.nextLine();
+										leeteclado.nextLine();  // limpia buffer teclado
 									}
 									String comentario = leeteclado.nextLine();
 									System.out.print(" ".repeat(10)
@@ -154,8 +152,8 @@ public class Transferencias {
 									String confirmaOperacion = leeteclado.next(); // solicta fonfirmar transacción
 									if (confirmaOperacion.equalsIgnoreCase("s")) {
 										System.out.print(" ".repeat(10) + "\n.... Se ha confirmado la operación\n");
-										saldoDestino += montoTransferir; // calcula el nuevo saldo de la cuenta origen
-										saldoOrigen -= montoTrfOrigen; // calcula el nuevo saldo de la cuenta destino
+										saldoDestino=saldoDestino.add(montoTransferir); // calcula el nuevo saldo de la cuenta origen
+										saldoOrigen=saldoOrigen.subtract(montoTrfOrigen); // calcula el nuevo saldo de la cuenta destino
 										ingreso(saldoDestino, cuentas, cuentaDestino); // aumenta saldo cuenta destino
 										reintegro(saldoOrigen, cuentas, cuentaOrigen); // disminuye saldo cuenta origen
 										id_transferencia++; // genera id de transferencia
@@ -208,8 +206,8 @@ public class Transferencias {
 	 * @return valor tipo double 
 	 */
 	// ingreso de factor de conversion de moneda
-	public static double solicitaFactor(String monedaOrigen, String monedaDestino, Scanner leeteclado) {
-		double factorCambio = 1f;
+	public static BigDecimal solicitaFactor(String monedaOrigen, String monedaDestino, Scanner leeteclado) {
+		BigDecimal factorCambio = BigDecimal.ONE;
 		if (!monedaOrigen.equals(monedaDestino)) {
 			System.out
 					.println("\n" + " ".repeat(10) + "Esta transfiriendo de " + monedaOrigen + " -> " + monedaDestino);
@@ -217,22 +215,32 @@ public class Transferencias {
 			String mensaje = " ".repeat(10) + "Favor indicar ¿ 1 " + monedaOrigen + " equivale a cuentos "
 					+ monedaDestino + " ? ";
 			System.out.print(mensaje);
-			factorCambio = ValidadorNumerico.validaDouble(leeteclado, mensaje); // pide factor de cambio de moneda
+			factorCambio = ValidadorNumerico.validaBigDecimal(leeteclado, mensaje); // pide factor de cambio de moneda
 		}
 		return factorCambio;
 	}
-
+	
+	/**
+	 * Aplica factor de conversión al monto a transferir
+	 *
+	 * @param monto a transferir, factor de cambio
+	 * @return valor tipo double valor convertido a moneda destino
+	 */
+	public static BigDecimal calculoAplicaFactorConversion(BigDecimal montoTransferir , BigDecimal factorCambio) {
+		return montoTransferir.multiply(factorCambio); // aplica factor de cambio
+	}
+	
 	/**
 	 * Solicita el monto de la transferencia
 	 *
 	 * @param moneda de origen, scanner
 	 * @return valor tipo double
 	 */
-	public static double solicitaMontoTransferir(String monedaOrigen, Scanner leeteclado) {
-		double montoTransferir = 0f;
+	public static BigDecimal solicitaMontoTransferir(String monedaOrigen, Scanner leeteclado) {
+		BigDecimal montoTransferir = BigDecimal.ZERO;
 		String mensaje = " ".repeat(10) + "Ingrese el monto a transferir " + monedaOrigen + " $ ";
 		System.out.print(mensaje);
-		montoTransferir = ValidadorNumerico.validaDouble(leeteclado, mensaje);
+		montoTransferir = ValidadorNumerico.validaBigDecimal(leeteclado, mensaje);
 		return montoTransferir;
 	}
 
@@ -243,7 +251,7 @@ public class Transferencias {
 	 *        id de la transferencia 
 	 * @return objeto tipo transferencia
 	 */
-	public static Transaction configuraObjetoTransferencia(double montoTrfOrigen, double montoTransferir,
+	public static Transaction configuraObjetoTransferencia(BigDecimal montoTrfOrigen, BigDecimal montoTransferir,
 			String comentario, Account cuentaOrigen, Account cuentaDestino, int id_transferencia) {
 		Random rand = new Random(); 
 		int contadorTransacciones = rand.nextInt(1000000); // el nro trf será aleatorio para fines prácticos
@@ -266,7 +274,7 @@ public class Transferencias {
 	 * @param saldo de cuenta destino, cuentas, cuenta destino
 	 * @return void
 	 */
-	public static void ingreso(double saldoDestino, List<Account> cuentas, Account cuentaDestino) {
+	public static void ingreso(BigDecimal saldoDestino, List<Account> cuentas, Account cuentaDestino) {
 		for (Account c : cuentas) {
 			if (c.getAccount_number().equals(cuentaDestino.getAccount_number())) {
 				c.setAccount_balance(saldoDestino);  // actualiza saldo en la cuenta destino transferencia
@@ -280,7 +288,7 @@ public class Transferencias {
 	 * @param saldo de cuenta origen, cuentas, cuenta origen
 	 * @return void
 	 */
-	public static void reintegro(double saldoOrigen, List<Account> cuentas, Account cuentaOrigen) {
+	public static void reintegro(BigDecimal saldoOrigen, List<Account> cuentas, Account cuentaOrigen) {
 		for (Account c : cuentas) {
 			if (c.getAccount_number().equals(cuentaOrigen.getAccount_number())) {
 				c.setAccount_balance(saldoOrigen); // actualiza saldo en la cuenta origen transferencia

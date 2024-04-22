@@ -1,6 +1,7 @@
 package wallet;
 
 import java.util.List;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -23,8 +24,8 @@ public class Pagos {
 	 * @param scanner, cuentas, cuentas de pago, cuentas pagadas, usuario autorizado
 	 * @return void
 	 */
-	public static void procesarPagos(Scanner leeteclado, List<Account> cuentas,
-			List<AccountPaid> accountPaids, List<AccountPayable> accountPayables, UserAuth userAuth) {
+	public static void procesarPagos(Scanner leeteclado, List<Account> cuentas, List<AccountPaid> accountPaids,
+			List<AccountPayable> accountPayables, UserAuth userAuth) {
 		AccountPayableService aps = new AccountPayableService(); // instanciar extidades
 		AccountPaidService apids = new AccountPaidService();
 		AccountService ctasService = new AccountService();
@@ -38,21 +39,21 @@ public class Pagos {
 					int idCuentaPago = 0; // id del usuario que paga
 					do {
 						Mostrar.tituloCuentasPagoUsuario(); // listar cuentas por pagar
-						aps.findAll(accountPayables); // buscas las cuentas de pago
+						aps.findAllByUser(accountPayables, userAuth); // buscas las cuentas de pago
 						String mensaje = "\nId Cuenta (0 = termina) ? ";
 						System.out.print(" ".repeat(10) + mensaje);
 						idCuentaPago = ValidadorNumerico.validaInt(leeteclado, mensaje);
 						if (idCuentaPago != 0) {
-							AccountPayable ap = aps.findById(idCuentaPago, accountPayables); // seleccionar cuenta
+							AccountPayable ap = aps.findByIdPagoAndUser(idCuentaPago, accountPayables, userAuth); // seleccionar cuenta
 							if (ap != null) {
 								// solicitar monto
 								mensaje = "\nMonto a pagar ? ";
 								System.out.print(mensaje);
-								Double montoAP = ValidadorNumerico.validaDouble(leeteclado, mensaje);
-								Account cuentaCliente = recuperaCuentaCliente(leeteclado, cuentas, userAuth,
-										ctasService); // recupera cuenta bancaria con la cual pagará la cuenta
+								BigDecimal montoAP = ValidadorNumerico.validaBigDecimal(leeteclado, mensaje);
+								// recupera cuenta bancaria con la cual pagará la cuenta
+								Account cuentaCliente = recuperaCuentaCliente(leeteclado, cuentas, userAuth, ctasService); 
 								if (cuentaCliente != null) { // cuenta de pago seleccionada válida
-									if (cuentaCliente.getAccount_balance() >= montoAP) {
+									if (cuentaCliente.getAccount_balance().compareTo(montoAP) >= 0) {
 										String FPago = seleccionFormaPago(leeteclado); // define forma de pago
 										System.out.print("\nConfirma el pago = s ? "); // confirma el pago
 										String confirmacion = leeteclado.next();
@@ -65,18 +66,17 @@ public class Pagos {
 											boolean resultadoPago = ctasService.descontarDinero(cuentas, nroCuenta,
 													montoAP); // Se efectua el pago descontando el saldo del
 																// cliente
-											if (!resultadoPago)
+											if (!resultadoPago) {
 												System.out.println(
 														"grave, posible inconsistencia en saldos, revertir cambios\navise al administrador de la app");
-										} else {
-											System.out.println("Se canceló el pago por decisión del usuario\n");
+											}
 										}
 									} else {
 										System.out.println(
 												"El monto ingresado (" + montoAP + ") es superior al saldo disponible");
 									}
 								} else {
-									System.out.println("¡ Error !, cuenta de pago no existe");
+									System.out.println("¡ Error !, cuenta bancaria no existe");
 								}
 							} else {
 								System.out.println("¡ Error !, cuenta a pagar no existe, reintente con otra cuenta");
@@ -155,7 +155,7 @@ public class Pagos {
 		do {
 			System.out.println("\nMétodos de Pago Disponibles");
 			for (int i = 0; i < mpagos.length; i++) {
-				System.out.println(" ".repeat(10)+"id:" + (i + 1) + " " + mpagos[i]);
+				System.out.println(" ".repeat(10) + "id:" + (i + 1) + " " + mpagos[i]);
 			}
 			String mensaje = "seleccione ? ";
 			System.out.print(mensaje);
@@ -174,22 +174,24 @@ public class Pagos {
 	 * @param scanner, cuentas, usuario autorizado, servicio cuentas
 	 * @return Cuenta
 	 */
-	public static Account recuperaCuentaCliente(Scanner leeteclado, 
-			List<Account> cuentas, UserAuth userAuth, AccountService ctasService) {
+	public static Account recuperaCuentaCliente(Scanner leeteclado, List<Account> cuentas, 
+			UserAuth userAuth, AccountService ctasService) {
 		int nroCuenta = 1;
-		Account ctaDelCliente = null; // almacena cuenta seleccionada
+		Account ctaDelCliente = null; // almacenará cuenta/s 
 		List<Account> ctas = ctasService.findAllForUser(cuentas, userAuth); // despliega cuentas del usuario
-
 		if (ctas != null) {
 			if (ctas.size() > 1) {
-				System.out.println("\nDebe seleccionar la cuenta pagadora."); // seleccionar cuenta bancaria
+				System.out.println("\nDebe seleccionar la cuenta que utilizará para pagar."); // seleccionar cuenta bancaria
 				for (Account cta : ctas) {
-					System.out.println(" ".repeat(10)+"Id: " + cta.getAccount_id() + " nro: " + cta.getAccount_number() + " saldo "
-							+ cta.getAccount_currency_id().getCurrency_symbol() + " " + cta.getAccount_balance());
+					System.out.println(" ".repeat(10) + "Id: " + cta.getAccount_id() + " nro: "
+							+ cta.getAccount_number() + " saldo " + cta.getAccount_currency_id().getCurrency_symbol()
+							+ " " + cta.getAccount_balance());
 				}
-				String mensaje = "\nSeleccione Id para operar ? ";
+				String mensaje = "\nSeleccione id ? ";
 				System.out.print(mensaje);
 				nroCuenta = ValidadorNumerico.validaInt(leeteclado, mensaje);
+			}else {
+				nroCuenta = ctas.get(0).getAccount_id(); // toma el id de la única cuenta del usuario
 			}
 			ctaDelCliente = ctasService.findById(nroCuenta, ctas);
 		} else {
