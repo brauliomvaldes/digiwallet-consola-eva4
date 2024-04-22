@@ -30,4 +30,17 @@ public class AuthService {
 		auths.add(userAuth);
 		return auths;
 	}
+	
+	public void listAllAuthUser(List<UserAuth> auths) {
+		auths.forEach(au->{
+			System.out.println("role: "+
+					au.getRole()+ " id: "+
+					au.getUser().getUser_id()+" nombre: "+
+					au.getUser().getUser_firstname()+" "+
+					au.getUser().getUser_lastname()+ " username: "+
+					au.getUsername()+" password: "+
+					au.getPassword()
+					);
+		});
+	}
 }

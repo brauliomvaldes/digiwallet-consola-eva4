@@ -10,6 +10,7 @@ import entities.Transaction;
 import entities.TypeOfAccount;
 import entities.User;
 import entities.UserAuth;
+import service.AuthService;
 import vistas.Mostrar;
 /**
  * Clase para el usuario Admin
@@ -51,6 +52,10 @@ public final class Mantenedor {
 							+ "		¡ Sin movimientos !\n		no hay transferencias que procesar.\n		Las transferencias se pueden crear en opción 3 del Menu Principal de Procesos");
 				}
 				break;
+			case "4":
+				AuthService authService = new AuthService();
+				Mostrar.tituloUsuariosAutorizados();
+				authService.listAllAuthUser(auths);
 			case "0":
 				break;
 			}

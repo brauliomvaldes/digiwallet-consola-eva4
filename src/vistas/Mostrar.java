@@ -117,6 +117,7 @@ public class Mostrar {
 		System.out.println(" ".repeat(20) + " 1 Usuarios");
 		System.out.println(" ".repeat(20) + " 2 Cuentas");
 		System.out.println(" ".repeat(20) + " 3 Transferencias");
+		System.out.println(" ".repeat(20) + " 4 ver Autorizados");
 		System.out.println(" ".repeat(20) + " 0 Volver a Principal");
 		System.out.println(" ".repeat(20) + "=".repeat(30));
 		System.out.print(" ".repeat(20) + "   Opción ? ");
@@ -372,6 +373,12 @@ public class Mostrar {
 		System.out.println("-".repeat(120));
 	}
 
+	public static void tituloUsuariosAutorizados() {
+		System.out.println("\n" + "-".repeat(120));
+		System.out.println(" ".repeat(10) + "\nUSUARIOS AUTORIZADOS\n");
+		System.out.println("-".repeat(120));
+	}
+	
 	public static void tituloCreacionCuentasPago() {
 		System.out.println("\n" + "-".repeat(120));
 		System.out.println(" ".repeat(10) + "\nNUEVA CUENTA DE PAGO\n");
