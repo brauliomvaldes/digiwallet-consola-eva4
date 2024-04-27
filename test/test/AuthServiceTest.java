@@ -13,6 +13,9 @@ import entities.User;
 import entities.UserAuth;
 import service.AuthService;
 
+/*
+ * Test unitario para servicio de autenticación usuario
+ */
 class AuthServiceTest {
 
 	AuthService authService;

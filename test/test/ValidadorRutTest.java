@@ -8,8 +8,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import service.ValidadorRut;
 
+/*
+ * Test unitario para proceso de validación de RUT
+ */
 class ValidadorRutTest {
 
+	// validación con ingreso de rut válidos
 	@ParameterizedTest
 	@ValueSource(strings = { "3903815-3", "15151688-2", "21810438-k", "9125518-9", "13944528-7", "25520204-9",
 			"9421531-5", "19302248-0", "23591913-3", "5862429-2", "17108732-5", "28061582-K", "4457031-9", "14365689-6",
@@ -19,7 +23,7 @@ class ValidadorRutTest {
 	void testTrueRut(String rut) {
 		assertAll(() -> assertTrue(ValidadorRut.validarRut(rut)));
 	}
-
+	// validación con ingreso de rut no válidos
 	@ParameterizedTest
 	@ValueSource(strings = { "3903815-0", "15151688-a", "21810439-k", "9125518-0", "13944528-b", "25520205-9",
 			"9421531-0", "19302248-c", "23591914-3", "5862429-0", "17108732-d", "28061583-k", "4457031-0", "14365689-e",

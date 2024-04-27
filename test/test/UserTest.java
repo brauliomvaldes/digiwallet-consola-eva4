@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test;
 
 import entities.UsuarioFake;
 
+/*
+ * Test unitario para probar clase User
+ */
 class UserTest {
 	
 	private UsuarioFake usuarioFake;

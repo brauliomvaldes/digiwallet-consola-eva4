@@ -11,15 +11,17 @@ import org.junit.jupiter.api.Test;
 import entities.User;
 import service.UserService;
 
+/*
+ * Test unitario para servicio de persistencia de usuarios
+ * si el usuario existe retorna el objeto usuario con sus datos
+ * si el usuario no existe retorna null
+ */
 class UserServiceTest {
 
 	UserService userService;
 	List<User> users;
 	User user;
 	
-	// prueva servicio usuarios 
-	// si el usuario existe retorna el objeto usuario con sus datos
-	// si no existe retorna null
 	
 	@BeforeEach
 	void setUp() {
